@@ -90,17 +90,38 @@ def snap(event):
     check()
 
 def check():
-    # checks for matches (ie 3 in a row)
-    for col in grid[1:]:
-        for i in range(5):
+    """checks for matches (ie 3 in a row)"""
+    for x in range(1,6):
+        for y in range(1,6):
             try:
-                if col[i][1] == col[i+1][1] == col[i+2][1]: # if match 3
-                    if col[i][1] == col[i + 3][1] == col[i + 4][1]: # if match 5
-                        print(col[i][2],col[i+1][2],col[i+2][2],col[i + 3][2],col[i + 4][2]) # print for prints sake
-
-                    print(col[i][2],col[i+1][2],col[i+2][2])
+                if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
+                    print(x,y)
+                if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]:
+                    print(x,y)
             except IndexError:
                 continue
+
+def fall_replace(tiles):
+    
+
+
+
+
+
+
+    # for col in grid[1:]:
+    #     for i in range(5):
+    #         try:
+    #             tes = [col[i][1] , col[i+1][1], col[i+2][1]]
+    #             if col[i][1] == col[i+1][1] == col[i+2][1]: # if match 3 in a row (not coloumn)
+    #                 if col[i][1] == col[i + 3][1] == col[i + 4][1]: # if match 5
+    #                     print(col[i][2],col[i+1][2],col[i+2][2],col[i + 3][2],col[i + 4][2]) # print for prints sake
+    #                 else:
+    #                     pass
+    #
+    #                 print(col[i][2],col[i+1][2],col[i+2][2])
+    #         except IndexError:
+    #             continue
 
 # dists.append(math.sqrt(((i[0] - x) * (i[1] - y)) + ((i[1] - y) * (i[1] - y))))
 
@@ -133,11 +154,10 @@ def gridset():
         grid.append(tmp) # puts the row on the rows spot, grid
     # for i in grid:
     #     print(i)
-
 if __name__ == '__main__':
     """who knows what this does"""
     root = Tk()
-    root.title("Colour Quest")
+    root.title("e")
     root.attributes("-fullscreen", True)
     gridset()
     root.mainloop()
