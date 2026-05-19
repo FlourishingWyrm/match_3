@@ -6,6 +6,9 @@ import random
 import os
 from PIL import Image
 from fractions import Fraction
+
+from samba import colour
+
 seed = [0,1]
 def pos_to_cor(x,y):
     """converts the pixel position to the location on the grid"""
@@ -95,38 +98,32 @@ def check():
         for y in range(1,6):
             try:
                 if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
-                    print(x,y)
+                    fall_replace([[x,y],[x+1,y],[x+2,y]])
                 if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]:
-                    print(x,y)
+                    fall_replace([[x,y],[x,y+1],[x,y+2]])
             except IndexError:
+                continue
+            except TypeError:
                 continue
 
 def fall_replace(tiles):
-    
-
-
-
-
-
-
-    # for col in grid[1:]:
-    #     for i in range(5):
-    #         try:
-    #             tes = [col[i][1] , col[i+1][1], col[i+2][1]]
-    #             if col[i][1] == col[i+1][1] == col[i+2][1]: # if match 3 in a row (not coloumn)
-    #                 if col[i][1] == col[i + 3][1] == col[i + 4][1]: # if match 5
-    #                     print(col[i][2],col[i+1][2],col[i+2][2],col[i + 3][2],col[i + 4][2]) # print for prints sake
-    #                 else:
-    #                     pass
-    #
-    #                 print(col[i][2],col[i+1][2],col[i+2][2])
-    #         except IndexError:
-    #             continue
-
-# dists.append(math.sqrt(((i[0] - x) * (i[1] - y)) + ((i[1] - y) * (i[1] - y))))
-
-    # widget.place(x=widget.trux,y=widget.truy)
-
+    for i in tiles:
+        print(i)
+        try:
+            if i[0]>1:
+                grid[i[0]][i[1]] = grid[i[0]][i[1]-1]
+                x,y = cor_to_pos(i[0],i[1])
+                grid[i[0]][i[1]][0].place(x=x,y=y)
+        except AttributeError:
+            continue
+        except TclError:
+            continue
+    print(grid)
+    # for item in grid:
+    #     g = []
+    #     for part in item:
+    #         g.append(part)
+    #     print(g)
 def seeder():
     """updates the seed"""
     global seed
@@ -135,7 +132,7 @@ def seeder():
 def gridset():
     """creates the grid"""
     global acc,grid
-    grid = [["","",999999]] # to make impossable to reach
+    grid = [["","#000000",999999]] # to make impossable to reach
     acc = []
     colours = ["#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32","#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32"]
     for up in range(5):
@@ -154,6 +151,7 @@ def gridset():
         grid.append(tmp) # puts the row on the rows spot, grid
     # for i in grid:
     #     print(i)
+    print(grid)
 if __name__ == '__main__':
     """who knows what this does"""
     root = Tk()
