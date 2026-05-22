@@ -9,7 +9,7 @@ from fractions import Fraction
 
 from samba import colour
 
-seed = [0,1]
+seed = [0,8]
 def pos_to_cor(x,y):
     """converts the pixel position to the location on the grid"""
     return int((x -740)/100) , int((y - 400)/100)
@@ -97,10 +97,14 @@ def check():
     for x in range(1,6):
         for y in range(1,6):
             try:
+                # if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
+                #     # fall_replace([[x,y],[x,y+1],[x,y+2]])
+                #     fall_replace([[x, y]])
                 if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
                     fall_replace([[x,y],[x+1,y],[x+2,y]])
-                if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]:
-                    fall_replace([[x,y],[x,y+1],[x,y+2]])
+                print(x,y)
+                print(grid[x][y][1] , grid[x][y+1][1] , grid[x][y+2][1])
+
             except IndexError:
                 continue
             except TypeError:
@@ -108,12 +112,17 @@ def check():
 
 def fall_replace(tiles):
     for i in tiles:
-        print(i)
         try:
-            if i[0]>1:
-                grid[i[0]][i[1]] = grid[i[0]][i[1]-1]
-                x,y = cor_to_pos(i[0],i[1])
-                grid[i[0]][i[1]][0].place(x=x,y=y)
+            if i[1]>0:
+                if i[0] == 5:
+                    x, y = cor_to_pos(i[0], 0)
+                    grid[i[0]][i[1]][0].place(x=x,y=1)
+                # grid[i[0]][i[1]] = grid[i[0]-1][i[1]]
+                # print("1")
+                # x,y = cor_to_pos(i[0],i[1])
+                # print("2")
+                # grid[i[0]][i[1]][0].place(x=x,y=y)
+                # print(3)
         except AttributeError:
             continue
         except TclError:
