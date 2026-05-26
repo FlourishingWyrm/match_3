@@ -8,8 +8,8 @@ from PIL import Image
 from fractions import Fraction
 
 from samba import colour
-
-seed = [0,8]
+colours = ["#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32","#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32"]
+seed = [2,8]
 def pos_to_cor(x,y):
     """converts the pixel position to the location on the grid"""
     return int((x -740)/100) , int((y - 400)/100)
@@ -63,31 +63,20 @@ def snap(event):
     for t in [1,0,-1]:
         for l in [1,0,-1]:
             dists.append(cor_to_pos(locs[0]+l, locs[1]+t))
-    # testing print functions not required but left for now
-    print(x, y)
-    for i in dists:
-
-        print((i[0],i[1]))
     for i in dists:
         # calculates the distance using fun maths
         prop = math.sqrt((x-i[0])*(x-i[0])+(y-i[1])*(y-i[1]))
-        print(prop)
         # if the distance is the shortest its x and y values will be used
         if prop < most and [i[0],i[1]] in acc:
-            print("     "+str(prop))
             most = prop
             fx,fy = i
     # thinking code (code written to understand ideas)
     pos_to_cor(fx,fy)
-    print(x,y)
-    print(fx,fy)
-    print(pos_to_cor(fx,fy))
 
     # swaps the two tiles to be swapped
     widget.place(x=fx,y=fy)
     sec = pos_to_cor(fx+100,fy+100)
     grid[sec[1]][sec[0]][0].place(x=sx,y=sy)
-    print(grid[sec[1]][sec[0]],grid[locs[1]+1][locs[0]+1])
     grid[sec[1]][sec[0]],grid[locs[1]+1][locs[0]+1] = grid[locs[1]+1][locs[0]+1],grid[sec[1]][sec[0]]
     print(grid[sec[1]][sec[0]],grid[locs[1]+1][locs[0]+1])
     check()
@@ -97,37 +86,66 @@ def check():
     for x in range(1,6):
         for y in range(1,6):
             try:
-                # if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
-                #     # fall_replace([[x,y],[x,y+1],[x,y+2]])
-                #     fall_replace([[x, y]])
+                if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
+                    fall_replace([x, y + 2])
+                    fall_replace([x, y + 1])
+                    fall_replace([x, y])
+
+
                 if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
-                    fall_replace([[x,y],[x+1,y],[x+2,y]])
-                print(x,y)
-                print(grid[x][y][1] , grid[x][y+1][1] , grid[x][y+2][1])
+                    fall_replace([x + 2, y])
+                    fall_replace([x + 1, y])
+                    fall_replace([x,y])
+
+
 
             except IndexError:
                 continue
             except TypeError:
                 continue
 
-def fall_replace(tiles):
-    for i in tiles:
-        try:
-            if i[1]>0:
-                if i[0] == 5:
-                    x, y = cor_to_pos(i[0], 0)
-                    grid[i[0]][i[1]][0].place(x=x,y=1)
-                # grid[i[0]][i[1]] = grid[i[0]-1][i[1]]
+def fall_replace(i):
+    try:
+        if i[1]>0:
+            if i[0] >0:
+                print(grid[i[0]-1][i[1]][0])
+                if grid[i[0]-1][i[1]][0] == ["spawn"]:
+                    print("prewhy")
+                    x, y = cor_to_pos(i[0], i[1])
+                    label = Label(root, bg=colours[int(seeder())], height=2, width=4, padx=0, pady=0,
+                                  text=str(i[0] + 5 * i[1]))  # creates the label
+                    label.bind("<ButtonPress-1>", start_drag)  # Detect mouse press to start dragging
+                    label.bind("<B1-Motion>", on_drag)  # Move label while dragging
+                    acc.append([x, y])  # appends co-ordinates to an important spot
+                    grid[i[0]][i[1]] =[label, colour, str(i[0] + 5 * i[1])]  # appends the label and its friends to the row
+                    grid[i[0]][i[1]][0].config(bg=colours[int(seeder())])
+                    #
+                    print("why")
+                else:
+                    print("prewa")
+                    grid[i[0]][i[1]][0].config(bg=grid[i[0]-1][i[1]][1])
+
+                    grid[i[0]][i[1]] = grid[i[0]-1][i[1]]
+                    x, y = cor_to_pos(i[0], i[1])
+                    grid[i[0]][i[1]][0].place(x=x, y=y)
+                    print("ewa")
+                    print(fall_replace([i[0]-1, i[1]]))
+
+
+
+                    print("wa")
+
                 # print("1")
                 # x,y = cor_to_pos(i[0],i[1])
                 # print("2")
                 # grid[i[0]][i[1]][0].place(x=x,y=y)
                 # print(3)
-        except AttributeError:
-            continue
-        except TclError:
-            continue
-    print(grid)
+    except AttributeError:
+        print("attribute")
+        return "fuck"
+    except TclError:
+        print("tcl")
+        return "you"
     # for item in grid:
     #     g = []
     #     for part in item:
@@ -141,9 +159,9 @@ def seeder():
 def gridset():
     """creates the grid"""
     global acc,grid
-    grid = [["","#000000",999999]] # to make impossable to reach
+    grid = [["spawn"]] # to make impossable to reach
     acc = []
-    colours = ["#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32","#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32"]
+
     for up in range(5):
         tmp=[["NONE","",99999]] # to make impossable to reach
         for a in range(5): # creates a row
@@ -155,12 +173,9 @@ def gridset():
             acc.append([x,y])# appends co-ordinates to an important spot
             label.place(x=x,y=y) # puts the tile on the grid where it goes
             tmp.append([label,colour,str(a+5*up)]) # appends the label and its friends to the row
-        print(tmp)
 
         grid.append(tmp) # puts the row on the rows spot, grid
-    # for i in grid:
-    #     print(i)
-    print(grid)
+
 if __name__ == '__main__':
     """who knows what this does"""
     root = Tk()
