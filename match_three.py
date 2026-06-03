@@ -9,7 +9,7 @@ from fractions import Fraction
 
 from samba import colour
 colours = ["#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32","#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32"]
-seed = [2,8]
+seed = [5,9]
 def pos_to_cor(x,y):
     """converts the pixel position to the location on the grid"""
     return int((x -740)/100) , int((y - 400)/100)
@@ -88,14 +88,14 @@ def check():
             try:
                 if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
                     fall_replace([x, y + 2])
-                    fall_replace([x, y + 1])
-                    fall_replace([x, y])
+                    # fall_replace([x, y + 1])
+                    # fall_replace([x, y])
 
 
                 if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
                     fall_replace([x + 2, y])
-                    fall_replace([x + 1, y])
-                    fall_replace([x,y])
+                    # fall_replace([x + 1, y])
+                    # fall_replace([x,y])
 
 
 
@@ -108,32 +108,43 @@ def fall_replace(i):
     try:
         if i[1]>0:
             if i[0] >0:
-                print(grid[i[0]-1][i[1]][0])
-                if grid[i[0]-1][i[1]][0] == ["spawn"]:
-                    print("prewhy")
-                    x, y = cor_to_pos(i[0], i[1])
-                    label = Label(root, bg=colours[int(seeder())], height=2, width=4, padx=0, pady=0,
-                                  text=str(i[0] + 5 * i[1]))  # creates the label
-                    label.bind("<ButtonPress-1>", start_drag)  # Detect mouse press to start dragging
-                    label.bind("<B1-Motion>", on_drag)  # Move label while dragging
-                    acc.append([x, y])  # appends co-ordinates to an important spot
-                    grid[i[0]][i[1]] =[label, colour, str(i[0] + 5 * i[1])]  # appends the label and its friends to the row
-                    grid[i[0]][i[1]][0].config(bg=colours[int(seeder())])
-                    #
-                    print("why")
-                else:
-                    print("prewa")
-                    grid[i[0]][i[1]][0].config(bg=grid[i[0]-1][i[1]][1])
-
-                    grid[i[0]][i[1]] = grid[i[0]-1][i[1]]
-                    x, y = cor_to_pos(i[0], i[1])
-                    grid[i[0]][i[1]][0].place(x=x, y=y)
-                    print("ewa")
-                    print(fall_replace([i[0]-1, i[1]]))
+                y = i[1]
+                x = i[0]
+                # tile[y][x]
+                print(grid[y][x])
+                grid[y][x] = grid[y-1][x]
+                print(grid[y][x])
+                grid[y][x][0].config( bg=grid[y][x][1],text=str(x+5*y))
 
 
 
-                    print("wa")
+
+                # print(grid[i[0]-1][i[1]][0])
+                # if grid[i[0]-1][i[1]][0] == ["spawn"]:
+                #     print("prewhy")
+                #     x, y = cor_to_pos(i[0], i[1])
+                #     label = Label(root, bg=colours[int(seeder())], height=2, width=4, padx=0, pady=0,
+                #                   text=str(i[0] + 5 * i[1]))  # creates the label
+                #     label.bind("<ButtonPress-1>", start_drag)  # Detect mouse press to start dragging
+                #     label.bind("<B1-Motion>", on_drag)  # Move label while dragging
+                #     acc.append([x, y])  # appends co-ordinates to an important spot
+                #     grid[i[0]][i[1]] =[label, colour, str(i[0] + 5 * i[1])]  # appends the label and its friends to the row
+                #     grid[i[0]][i[1]][0].config(bg=colours[int(seeder())])
+                #     #
+                #     print("why")
+                # else:
+                #     print("prewa")
+                #     grid[i[0]][i[1]][0].config(bg=grid[i[0]-1][i[1]][1])
+                #
+                #     grid[i[0]][i[1]] = grid[i[0]-1][i[1]]
+                #     x, y = cor_to_pos(i[0], i[1])
+                #     grid[i[0]][i[1]][0].place(x=x, y=y)
+                #     print("ewa")
+                #     print(fall_replace([i[0]-1, i[1]]))
+                #
+                #
+                #
+                #     print("wa")
 
                 # print("1")
                 # x,y = cor_to_pos(i[0],i[1])
