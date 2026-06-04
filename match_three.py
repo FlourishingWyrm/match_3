@@ -78,7 +78,6 @@ def snap(event):
     sec = pos_to_cor(fx+100,fy+100)
     grid[sec[1]][sec[0]][0].place(x=sx,y=sy)
     grid[sec[1]][sec[0]],grid[locs[1]+1][locs[0]+1] = grid[locs[1]+1][locs[0]+1],grid[sec[1]][sec[0]]
-    print(grid[sec[1]][sec[0]],grid[locs[1]+1][locs[0]+1])
     check()
 
 def check():
@@ -87,34 +86,41 @@ def check():
         for y in range(1,6):
             try:
                 if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
-                    fall_replace([x, y + 2])
+                    # fall_replace([x, y + 2])
                     # fall_replace([x, y + 1])
-                    # fall_replace([x, y])
+                    fall_replace([x, y])
+                    # grid[x][y][0].place(x=9999999, y=9999999)
 
 
                 if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
-                    fall_replace([x + 2, y])
+                    #fall_replace([x + 2, y])
                     # fall_replace([x + 1, y])
                     # fall_replace([x,y])
+                    pass
 
 
 
             except IndexError:
+                print("s")
                 continue
             except TypeError:
+                print("xe")
                 continue
 
 def fall_replace(i):
     try:
+        x = i[1]
+        y = i[0]
         if i[1]>0:
             if i[0] >0:
-                y = i[1]
-                x = i[0]
+
                 # tile[y][x]
                 print(grid[y][x])
                 grid[y][x] = grid[y-1][x]
                 print(grid[y][x])
-                grid[y][x][0].config( bg=grid[y][x][1],text=str(x+5*y))
+                fall_replace([y-1,x])
+
+
 
 
 
@@ -157,6 +163,35 @@ def fall_replace(i):
     except TclError:
         print("tcl")
         return "you"
+    except IndexError:
+        qx = i[1]
+        qy = i[0]
+        print("exe")
+
+        colour = colours[int(seeder())]
+        grid[qy][qx][0] = Label(root, bg=colour, height=2, width=4, padx=0, pady=0, text="n")
+        grid[qy][qx][0].bind("<ButtonPress-1>", start_drag)  # Detect mouse press to start dragging
+        grid[qy][qx][0].bind("<B1-Motion>", on_drag)  # Move label while dragging
+        print(grid[qy][qx])
+        update()
+
+
+def update():
+    print("s;kdfuheo")
+    try:
+        for x in range(1, 6):
+            for y in range(1, 6):
+                xe,ye = cor_to_pos(y-1,x-1)
+                grid[x][y][0].place(x = xe,y = ye)
+    except IndexError:
+        return "a"
+    except TypeError:
+        print("72.5")
+
+
+
+
+
     # for item in grid:
     #     g = []
     #     for part in item:
