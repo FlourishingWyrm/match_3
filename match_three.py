@@ -88,6 +88,7 @@ def check():
                 if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
                     # fall_replace([x, y + 2])
                     # fall_replace([x, y + 1])
+                    grid[x][y][0].destroy()
                     fall_replace([x, y])
                     # grid[x][y][0].place(x=9999999, y=9999999)
 
@@ -118,7 +119,8 @@ def fall_replace(i):
                 print(grid[y][x])
                 grid[y][x] = grid[y-1][x]
                 print(grid[y][x])
-                fall_replace([y-1,x])
+                update()
+                print(fall_replace([y-1,x]))
 
 
 
@@ -159,21 +161,28 @@ def fall_replace(i):
                 # print(3)
     except AttributeError:
         print("attribute")
-        return "fuck"
+        return "censored"
     except TclError:
         print("tcl")
         return "you"
     except IndexError:
         qx = i[1]
         qy = i[0]
-        print("exe")
+        print(qx,qy)
 
         colour = colours[int(seeder())]
+        for f in grid:
+            print(f)
+        print(grid[qy][qx])
+        star = grid[qy][qx][0]
         grid[qy][qx][0] = Label(root, bg=colour, height=2, width=4, padx=0, pady=0, text="n")
         grid[qy][qx][0].bind("<ButtonPress-1>", start_drag)  # Detect mouse press to start dragging
         grid[qy][qx][0].bind("<B1-Motion>", on_drag)  # Move label while dragging
+        grid[1][2][0] = star
         print(grid[qy][qx])
-        update()
+        for f in grid:
+            print(f)
+        return ""
 
 
 def update():
