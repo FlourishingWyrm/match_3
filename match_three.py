@@ -8,8 +8,8 @@ from PIL import Image
 from fractions import Fraction
 
 from samba import colour
-colours = ["#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32","#FF0000","#0000FF", "#9D00FF", "#FF8000","#32CD32"]
-seed = [5,9]
+colours = ["#FF0000","#0000FF", "#FF0000","#0000FF","#FF0000","#0000FF","#FF0000","#0000FF","#FF0000","#0000FF","#FF0000","#0000FF",]
+seed = [6,1]
 def pos_to_cor(x,y):
     """converts the pixel position to the location on the grid"""
     return int((x -740)/100) , int((y - 400)/100)
@@ -86,21 +86,42 @@ def check():
         for y in range(1,6):
             try:
                 if grid[x][y][1] == grid[x][y+1][1] == grid[x][y+2][1]: # across check due to the downward check checking out of bounds causing it to be skipped
-                    # fall_replace([x, y + 2])
-                    # fall_replace([x, y + 1])
+                    grid[x][y + 2][0].destroy()
+                    fall_replace([x, y + 2])
+                    time.sleep(0.1) # sleep
+                    root.update() # update
+                    grid[x][y + 1][0].destroy()
+                    fall_replace([x, y + 1])
+                    time.sleep(0.1) # sleep
+                    root.update() # update
                     grid[x][y][0].destroy()
                     fall_replace([x, y])
-                    # grid[x][y][0].place(x=9999999, y=9999999)
-
-
-                if grid[x][y][1] == grid[x+1][y][1] == grid[x+2][y][1]:
-                    #fall_replace([x + 2, y])
-                    # fall_replace([x + 1, y])
-                    # fall_replace([x,y])
-                    pass
-
-
-
+                    time.sleep(0.1) # sleep
+                    root.update() # update
+                    check() # allows for continuous checks
+            except IndexError:
+                print("s")
+                continue
+            except TypeError:
+                print("xe")
+                continue
+    for x in range(1, 6):
+        for y in range(1, 6):
+            try:
+                if grid[x][y][1] == grid[x + 1][y][1] == grid[x + 2][y][1]:
+                    grid[x][y][0].destroy()
+                    fall_replace([x, y])
+                    time.sleep(0.1) # sleep
+                    root.update() # update
+                    grid[x + 1][y][0].destroy()
+                    fall_replace([x + 1, y])
+                    time.sleep(0.1) # sleep
+                    root.update() # update
+                    grid[x + 2][y][0].destroy()
+                    fall_replace([x + 2, y])
+                    time.sleep(0.1) # sleep
+                    root.update() # update
+                    check() # allows for continuous checks
             except IndexError:
                 print("s")
                 continue
@@ -115,7 +136,7 @@ def fall_replace(i):
         if i[1]>0:
             if i[0] >0:
 
-                # tile[y][x]
+                print(x,y)
                 print(grid[y][x])
                 grid[y][x] = grid[y-1][x]
                 print(grid[y][x])
@@ -174,14 +195,16 @@ def fall_replace(i):
         for f in grid:
             print(f)
         print(grid[qy][qx])
-        star = grid[qy][qx][0]
-        grid[qy][qx][0] = Label(root, bg=colour, height=2, width=4, padx=0, pady=0, text="n")
+        star = grid[qy][qx]
+        star = str(star)
+        print(star)
+        grid[qy][qx] = [Label(root, bg=colour, height=2, width=4, padx=0, pady=0, text="n"),colour,"n"]
         grid[qy][qx][0].bind("<ButtonPress-1>", start_drag)  # Detect mouse press to start dragging
         grid[qy][qx][0].bind("<B1-Motion>", on_drag)  # Move label while dragging
-        grid[1][2][0] = star
         print(grid[qy][qx])
         for f in grid:
             print(f)
+        update()
         return ""
 
 
