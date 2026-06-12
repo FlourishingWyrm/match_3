@@ -1,12 +1,21 @@
 import os
+import subprocess
 import platform
 from tkinter import *
 import time
 import math
-game_state = ["none",1.0,3,0]
+with open("vars"+".txt", "r") as f:
+    exec(f)
+game_state = ["none",1.0,[3,2],0]
 colours = ["#FF0000", "#0000FF", "#9D00FF", "#FF8000", "#32CD32", "#FF0000", "#0000FF", "#9D00FF", "#FF8000", "#32CD32"]
 seed = [6, 1]
 
+def wipe(f):
+    with open('storage.txt', 'w') as a:
+        a.write('n')
+    f.destroy()
+    subprocess.run(["python", "match_three.py"])
+    quit()
 
 def pos_to_cor(x, y):
     """converts the pixel position to the location on the grid"""
@@ -46,6 +55,15 @@ def leftMostDigit(n):
 
 def snap(event):
     """snaps back to the grid and swaps the two tiles (if applicable)"""
+    print(game_state)
+    game_state[2][0] -= 1
+    game_state[2][1] -= 1
+    if game_state[2][1] == 0:
+        game_state[1] = 1.0
+    if game_state[2][0] == 0:
+        Label(fg="#000000", text="you died,L",font=("Arial", "70", "bold"), height=10,width=10).place(x=750,y=100)
+        Button(text="again?",command=lambda: wipe(root)).place(x=0,y=0)
+
     widget = event.widget  # Get reference to the dragged widget
     # possably not nessary can be commented out later
     x = widget.winfo_x() - widget.startX + event.x
@@ -228,13 +246,10 @@ def update():
 
 
 def score(type):
-    game_state[2] = 3
-    if game_state[0] == type:
-        game_state[1]+=0.1
+    game_state[1]+=0.1
 
     game_state[3]+= 100*game_state[1]
     game_state[4].config(text=str(game_state[3]),font=("Arial", "25", "bold"))
-    print(str(round(game_state[1],2)),"aljejsbflauevrfi")
     game_state[5].config(text=str(round(game_state[1],2)))
     game_state[4].place(x=1610, y=25)
     root.update()
@@ -249,6 +264,8 @@ def seeder():
     seed = [seed[1], seed[0] + seed[1]]
     return leftMostDigit(seed[1])
 
+def saq():
+    text = f"grid = {grid}\n game_state = {game_state}"
 
 def gridset():
     """creates the grid"""
@@ -272,6 +289,7 @@ def gridset():
     scoreback = Label(root, bg="#48F07F", width=20, height=3)
     score = Label(bg="#48F07F",text="0")
     multi = Label(bg="#00FF00",text="1.0")
+    Button(root,text="X",command=lambda: saq()).place(x=0,y=0)
     game_state.append(score)
     game_state.append(multi)
     multi.place(x=1600,y=90)
@@ -280,9 +298,12 @@ def gridset():
 if __name__ == '__main__':
     """who knows what this does"""
     root = Tk()
-    trial = input("do you want the instructions and licences?")+" "
+    with open("storage" + ".txt", "r") as f:
+        trial = f.read()
+    print(trial)
+
     while (not trial[0].lower() == "n" and not trial[0].lower() == "y"):
-        trial = input("please enter either yes or no")+" "
+        trial = input("do you want the instructions and licences?, please enter yes or no") + " "
         print(trial[0].lower()=="n")
     if trial[0].lower() == "n":
         print("e")
